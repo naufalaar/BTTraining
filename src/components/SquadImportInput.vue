@@ -23,6 +23,7 @@
             </b-row>
           </b-container>
         </b-form>
+        {{ }}
       </b-card-text>
     </b-card>
   </div>
@@ -32,7 +33,7 @@
 import axios from "axios";
 
 export default {
-  name: "PlayerImportInput",
+  name: "SquadImportInput",
   data() {
     return {
       textEntered: "",
@@ -47,16 +48,16 @@ export default {
         };
         await axios
           .post(
-            process.env.VUE_APP_ROOT_API + "parsePlayer",
-            this.textEntered.replace(/\n/g, " "),
+            process.env.VUE_APP_ROOT_API + "parseSquad",
+            this.textEntered.replace(/\n\n/g, "|").replace(/\n/g, " ").split("|"),
             { headers: headers }
           )
           .then((response) => {
             this.parseResult = response.data;
-            this.parseResult.team = { teamId: this.$store.state.currentTeam.teamId };
+            this.parseResult.map(o=>(o.team={"teamId": this.$store.state.currentTeam.teamId }))
           })
           .catch((response) => {
-            this.$bvToast.toast(`Error while parsing player`, {
+            this.$bvToast.toast(`Error while parsing squad`, {
           title: 'Parsing Failed',
           autoHideDelay: 5000,
           appendToast: true,

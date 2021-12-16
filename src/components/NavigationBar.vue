@@ -27,9 +27,9 @@
           >Coach Analysis</b-nav-item
         > -->
         
-        <!-- <b-nav-item to="/importSquad" exact exact-active-class="active"
+        <b-nav-item to="/importSquad" exact exact-active-class="active"
           >Import Squad</b-nav-item
-        > -->
+        >
         <b-nav-item to="/importPlayer" exact exact-active-class="active"
           >Import Player</b-nav-item
         >

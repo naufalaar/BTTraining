@@ -94,9 +94,7 @@
             <label for="playerId">Fielding:</label>
             <b-form-select v-model="player.fielding" :options="skills"></b-form-select>
           </b-col>
-          <b-col align-self="end"><b-button block variant="secondary" type="submit"
-                    >Import Player</b-button
-                  ></b-col>
+          <b-col align-self="end"></b-col>
         </b-row>
         </b-form>
       </b-card-text>
@@ -108,7 +106,7 @@
 import axios from "axios";
 
 export default {
-  name: "PlayerImportDetail",
+  name: "SquadImportDetail",
   data() {
     return {
     };
@@ -133,7 +131,6 @@ export default {
           title: 'Import Success',
           autoHideDelay: 5000,
           appendToast: true,
-          noCloseButton: true,
           variant: "info"
         })
           this.player = response.data;
@@ -143,7 +140,6 @@ export default {
           title: 'Import Failed',
           autoHideDelay: 5000,
           appendToast: true,
-          noCloseButton: true,
           variant: "danger"
         })
         });
