@@ -143,6 +143,7 @@ export default {
       }
     },
     isValid() {
+      console.log(process.env.VUE_APP_ROOT_API);
       let userLength = this.credentials.username.length;
       let passLength = this.credentials.password.length;
       if (userLength == 0) this.validation.username = false;
