@@ -44,7 +44,7 @@ export default {
       };
       await axios
         .post(
-          "https://bttraining-api-test.herokuapp.com/teamPlayers",
+          process.env.VUE_APP_ROOT_API + "teamPlayers",
           { teamId: this.$store.state.currentTeam.teamId },
           { headers: headers }
         )

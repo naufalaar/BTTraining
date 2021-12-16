@@ -186,7 +186,7 @@ export default {
         skill: this.camelCase(skill),
       };
       await axios
-        .post("https://bttraining-api-test.herokuapp.com/saveSkillChange", skillChange, {
+        .post(process.env.VUE_APP_ROOT_API + "saveSkillChange", skillChange, {
           headers: headers,
         })
         .then((response) => {

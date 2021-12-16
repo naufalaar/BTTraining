@@ -56,7 +56,7 @@ export default {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + this.$store.state.jwtToken
     }
-      await axios.post("https://bttraining-api-test.herokuapp.com/getAllTrainingSession", {"teamId": this.$store.state.currentTeam.teamId} , { headers: headers })
+      await axios.post(process.env.VUE_APP_ROOT_API + "getAllTrainingSession", {"teamId": this.$store.state.currentTeam.teamId} , { headers: headers })
             .then(response => {
                 this.trainingHistory = response.data;
                 })

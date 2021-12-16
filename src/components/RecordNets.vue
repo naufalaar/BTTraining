@@ -173,7 +173,7 @@ export default {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + this.$store.state.jwtToken
     }
-      await axios.post("https://bttraining-api-test.herokuapp.com/saveMultipleSessions", sessionsList , { headers: headers })
+      await axios.post(process.env.VUE_APP_ROOT_API + "saveMultipleSessions", sessionsList , { headers: headers })
             .then(response => {
                 console.log("Sessions saved");
                 })

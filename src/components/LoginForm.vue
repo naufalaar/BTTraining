@@ -81,7 +81,7 @@ export default {
       this.validation.serverError = false;
       if (this.isValid()) {
         await axios
-          .post("https://bttraining-api-test.herokuapp.com/login", this.credentials)
+          .post(process.env.VUE_APP_ROOT_API + "login", this.credentials)
           .then((response) => {
             this.$store.dispatch(
               "setToken",
@@ -93,7 +93,7 @@ export default {
             };
             axios
               .post(
-                "https://bttraining-api-test.herokuapp.com/getManagerByUsername",
+                process.env.VUE_APP_ROOT_API + "getManagerByUsername",
                 { username: this.credentials.username },
                 { headers: headers }
               )
@@ -117,7 +117,7 @@ export default {
               });
               axios
               .post(
-                "https://bttraining-api-test.herokuapp.com/getCurrentWeek",
+                process.env.VUE_APP_ROOT_API + "getCurrentWeek",
                 null,
                 { headers: headers }
               )
@@ -143,7 +143,6 @@ export default {
       }
     },
     isValid() {
-      console.log(process.env.VUE_APP_ROOT_API);
       let userLength = this.credentials.username.length;
       let passLength = this.credentials.password.length;
       if (userLength == 0) this.validation.username = false;

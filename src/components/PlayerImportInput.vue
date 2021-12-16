@@ -70,7 +70,7 @@ export default {
         };
         await axios
           .post(
-            "https://bttraining-api-test.herokuapp.com/parsePlayer",
+            process.env.VUE_APP_ROOT_API + "parsePlayer",
             this.textEntered.replace(/\n/g, " "),
             { headers: headers }
           )

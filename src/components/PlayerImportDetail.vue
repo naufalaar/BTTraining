@@ -129,7 +129,7 @@ export default {
       };
       await axios
         .post(
-          "https://bttraining-api-test.herokuapp.com/savePlayer",
+          process.env.VUE_APP_ROOT_API + "savePlayer",
           this.player,
           { headers: headers }
         )

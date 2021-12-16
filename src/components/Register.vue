@@ -149,7 +149,7 @@ export default {
       this.validation.serverError = false;
       if (this.isValid()) {
         await axios
-          .post("https://bttraining-api-test.herokuapp.com/sign-up", this.manager)
+          .post(process.env.VUE_APP_ROOT_API + "sign-up", this.manager)
           .then((response) => {
             console.log("Registered");
           })

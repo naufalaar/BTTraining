@@ -48,7 +48,7 @@ export default {
       'Content-Type': 'application/json',
       'Authorization': 'Bearer ' + this.$store.state.jwtToken
     }
-      axios.post("https://bttraining-api-test.herokuapp.com/teamSummary", {teamId: this.$store.state.currentTeam.teamId}, { headers: headers })
+      axios.post(process.env.VUE_APP_ROOT_API + "teamSummary", {teamId: this.$store.state.currentTeam.teamId}, { headers: headers })
             .then(response => {
                 this.summary = response.data;
                 })
