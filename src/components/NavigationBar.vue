@@ -74,7 +74,7 @@ export default {
         team["type"] = "Main";
       }
       this.$store.dispatch("setTeam",team);
-      this.$router.go();
+      this.$router.go(this.$router.currentRoute);
     }
   },
 };
