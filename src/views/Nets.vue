@@ -4,7 +4,7 @@
     <b-container fluid>
       <b-row class="mt-4">
         <b-col>
-          <RecordNets v-if="trainingHistory" v-bind:trainingHistory="trainingHistory" v-bind:seasons="seasons" v-bind:squad="squad" v-bind:selectedSeason="currentSeason" v-bind:selectedWeek="currentWeek"/>
+          <RecordNets v-if="trainingHistory" @newHistory="updateHistory($event)" v-bind:trainingHistory="trainingHistory" v-bind:seasons="seasons" v-bind:squad="squad" v-bind:selectedSeason="currentSeason" v-bind:selectedWeek="currentWeek"/>
         </b-col>
       </b-row>
       <b-row>
@@ -62,6 +62,9 @@ export default {
                 })
             .catch(response => {console.log(response)});
     },
+    updateHistory(newHistory){
+      this.trainingHistory = newHistory;
+    }
   }
 };
 </script>

@@ -11,6 +11,7 @@
               id="season"
               v-model="selectedSeason"
               :options="seasons"
+              ><b-form-select-option :value="null"></b-form-select-option
             ></b-form-select>
           </b-form-group>
         </b-col>
@@ -24,22 +25,27 @@
           </b-form-group>
         </b-col>
         <b-col></b-col>
+        <b-col align-self="center">
+          <!-- <b-button block type="submit" variant="secondary"
+            >Copy Previous</b-button
+          > -->
+        </b-col>
         <b-col align-self="center"
           ><b-button
             v-on:click="addPlayer"
             block
             type="submit"
             variant="secondary"
+            :disabled="!isValidNets()"
             >Add Player</b-button
           ></b-col
         >
         <b-col align-self="center"
-          ><b-button block type="submit" variant="secondary"
-            >Copy Previous</b-button
-          ></b-col
-        >
-        <b-col align-self="center"
-          ><b-button v-on:click="saveTrainingSessions()" block type="submit" variant="secondary"
+          ><b-button
+            v-on:click="saveTrainingSessions()"
+            block
+            type="submit"
+            variant="secondary"
             >Save Nets</b-button
           ></b-col
         >
@@ -56,6 +62,11 @@
               id="player"
               :options="playerList"
               v-model="training.player"
+              :disabled="training.id != ''"
+              ><template #first>
+                <b-form-select-option
+                  value=""
+                ></b-form-select-option> </template
             ></b-form-select>
           </b-form-group>
         </b-col>
@@ -65,6 +76,11 @@
               id="net"
               :options="trainingSkills"
               v-model="training.net"
+              :disabled="training.id != ''"
+              ><template #first>
+                <b-form-select-option
+                  value=""
+                ></b-form-select-option> </template
             ></b-form-select>
           </b-form-group>
         </b-col>
@@ -74,15 +90,24 @@
             label="Quantity:"
             label-for="quantity"
           >
-            <b-form-input
+            <b-form-select
               id="quantity"
               v-model="training.quantity"
-            ></b-form-input>
+              :options="netQuantity"
+            ></b-form-select>
           </b-form-group>
         </b-col>
         <b-col align-self="center">
-          <b-button v-on:click="removePlayer(index)" variant="secondary" class="mb-2">
-            <b-icon icon="trash" aria-hidden="true"></b-icon> Delete
+          <b-button block size="sm" v-if="
+              training.player == '' &&
+              training.quantity == 0 &&
+              training.net == ''
+            "
+            v-on:click="removePlayer(index)"
+            variant="outline-secondary"
+            class="mt-2"
+          >
+            <b-icon icon="trash" aria-hidden="true"></b-icon> Delete Row
           </b-button></b-col
         >
         <b-col> </b-col>
@@ -93,7 +118,7 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 export default {
   name: "RecordNets",
@@ -127,6 +152,7 @@ export default {
               net: item.net,
               player: item.player,
               quantity: item.quantity,
+              team: item.team
             };
           });
           trainingWeek[week] = arr;
@@ -152,32 +178,85 @@ export default {
   methods: {
     getFormattedSessions() {},
     addPlayer() {
-      this.selectedSession.push({ id: "", net: "", player: "", quantity: "" });
+      this.selectedSession.push({ id: "", net: "", player: "", quantity: 0 });
     },
     removePlayer(index) {
-      this.selectedSession.splice(index,1);
+      this.selectedSession.splice(index, 1);
     },
-    async saveTrainingSessions(){
+    async saveTrainingSessions() {
+      if(!this.canSave()){
+        this.$bvToast.toast(`Please enter proper net details`, {
+          title: 'Invalid Nets',
+          autoHideDelay: 5000,
+          appendToast: true,
+          noCloseButton: true,
+          variant: "danger"
+        })
+      }else{
       let sessionsList = [];
-      for(let session of this.selectedSession){
+      for (let session of this.selectedSession) {
         let tempSession = {};
         tempSession["id"] = session.id;
         tempSession["net"] = session.net;
-        tempSession["player"] = {"playerId":session.player};
+        tempSession["player"] = { playerId: session.player };
         tempSession["quantity"] = session.quantity;
         tempSession["season"] = this.selectedSeason;
         tempSession["week"] = this.selectedWeek;
+        tempSession["team"] = session.team != null ? session.team : { teamId: this.$store.state.currentTeam.teamId };
         sessionsList.push(tempSession);
       }
+      console.log(sessionsList);
       const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + this.$store.state.jwtToken
-    }
-      await axios.post(process.env.VUE_APP_ROOT_API + "saveMultipleSessions", sessionsList , { headers: headers })
-            .then(response => {
-                console.log("Sessions saved");
-                })
-            .catch(response => {console.log(response)});
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.$store.state.jwtToken,
+      };
+      await axios
+        .post(
+          process.env.VUE_APP_ROOT_API + "saveMultipleSessions",
+          sessionsList,
+          { headers: headers }
+        )
+        .then((response) => {
+          this.$bvToast.toast(`Nets saved successfully`, {
+          title: 'Save Success',
+          autoHideDelay: 5000,
+          appendToast: true,
+          noCloseButton: true,
+          variant: "info"
+        })
+          this.$emit("newHistory", response.data);
+        })
+        .catch((response) => {
+          this.$bvToast.toast(`Error while saving nets`, {
+          title: 'Save Failed',
+          autoHideDelay: 5000,
+          appendToast: true,
+          noCloseButton: true,
+          variant: "danger"
+        })
+        });
+      }
+    },
+    isValidNets(){
+      let quantity = 0;
+      for (let session of this.selectedSession){
+        quantity += session.quantity;
+        if (quantity > 10)
+          return false;
+      }
+      return true;
+    },
+    isValidSession(){
+      for (let session of this.selectedSession){
+        if (session.id == '' && session.quantity == 0)
+          return false;
+        if (session.player == '' || session.net == '' )
+          return false;
+      } 
+      return true;
+    },
+    canSave(){
+      return this.isValidNets() && this.isValidSession();
     }
   },
   data() {
@@ -189,8 +268,9 @@ export default {
         "Batting",
         "Bowling",
         "Fielding",
-        "Wicket Keeping",
+        {value:"WicketKeeping", text:"Wicket Keeping"},
       ],
+      netQuantity: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     };
   },
 };
