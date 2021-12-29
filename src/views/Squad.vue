@@ -16,7 +16,7 @@
       </b-row>
       <b-row v-else>
         <b-col>
-          <b-card class="mt-4" bg-variant="primary" text-variant="danger"> 
+          <b-card class="mt-4" bg-variant="primary" text-variant="secondary">
             <b-card-text class="text-center">
               <h4>No players found - Please import players.</h4>
             </b-card-text>
@@ -28,39 +28,14 @@
 </template>
 
 <script>
-import axios from "axios";
-
 import NavigationBar from "../components/NavigationBar.vue";
 import PlayerList from "../components/PlayerList.vue";
 import PlayerCardSimple from "../components/PlayerCardSimple.vue";
 
 export default {
   components: { NavigationBar, PlayerList, PlayerCardSimple },
-  methods: {
-    async getSquad() {
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + this.$store.state.jwtToken,
-      };
-      await axios
-        .post(
-          process.env.VUE_APP_ROOT_API + "teamPlayers",
-          { teamId: this.$store.state.currentTeam.teamId },
-          { headers: headers }
-        )
-        .then((response) => {
-          this.$store.dispatch("setSquad", response.data);
-        })
-        .catch((response) => {
-          console.log(response);
-        });
-    },
-  },
-  mounted() {
-    this.getSquad();
-  },
   computed: {
-    squad: function () {
+    squad() {
       return this.$store.state.squad;
     },
   },

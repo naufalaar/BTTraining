@@ -11,8 +11,8 @@
               id="season"
               v-model="selectedSeason"
               :options="seasons"
-              ><b-form-select-option :value="null"></b-form-select-option
-            ></b-form-select>
+              >
+            </b-form-select>
           </b-form-group>
         </b-col>
         <b-col>
@@ -40,13 +40,21 @@
             >Add Player</b-button
           ></b-col
         >
-        <b-col align-self="center"
-          ><b-button
-            v-on:click="saveTrainingSessions()"
-            block
-            type="submit"
-            variant="secondary"
-            >Save Nets</b-button
+        <b-col align-self="center">
+          <b-overlay
+            :show="show"
+            variant="dark"
+            opacity="0.9"
+            spinner-small
+            spinner-variant="secondary"
+          >
+            <b-button
+              v-on:click="saveTrainingSessions()"
+              block
+              type="submit"
+              variant="secondary"
+              >Save Nets</b-button
+            ></b-overlay
           ></b-col
         >
       </b-row>
@@ -98,7 +106,10 @@
           </b-form-group>
         </b-col>
         <b-col align-self="center">
-          <b-button block size="sm" v-if="
+          <b-button
+            block
+            size="sm"
+            v-if="
               training.player == '' &&
               training.quantity == 0 &&
               training.net == ''
@@ -152,7 +163,7 @@ export default {
               net: item.net,
               player: item.player,
               quantity: item.quantity,
-              team: item.team
+              team: item.team,
             };
           });
           trainingWeek[week] = arr;
@@ -184,83 +195,85 @@ export default {
       this.selectedSession.splice(index, 1);
     },
     async saveTrainingSessions() {
-      if(!this.canSave()){
+      this.show = true;
+      if (!this.canSave()) {
         this.$bvToast.toast(`Please enter proper net details`, {
-          title: 'Invalid Nets',
+          title: "Invalid Nets",
           autoHideDelay: 5000,
           appendToast: true,
           noCloseButton: true,
-          variant: "danger"
-        })
-      }else{
-      let sessionsList = [];
-      for (let session of this.selectedSession) {
-        let tempSession = {};
-        tempSession["id"] = session.id;
-        tempSession["net"] = session.net;
-        tempSession["player"] = { playerId: session.player };
-        tempSession["quantity"] = session.quantity;
-        tempSession["season"] = this.selectedSeason;
-        tempSession["week"] = this.selectedWeek;
-        tempSession["team"] = session.team != null ? session.team : { teamId: this.$store.state.currentTeam.teamId };
-        sessionsList.push(tempSession);
-      }
-      console.log(sessionsList);
-      const headers = {
-        "Content-Type": "application/json",
-        Authorization: "Bearer " + this.$store.state.jwtToken,
-      };
-      await axios
-        .post(
-          process.env.VUE_APP_ROOT_API + "saveMultipleSessions",
-          sessionsList,
-          { headers: headers }
-        )
-        .then((response) => {
-          this.$bvToast.toast(`Nets saved successfully`, {
-          title: 'Save Success',
-          autoHideDelay: 5000,
-          appendToast: true,
-          noCloseButton: true,
-          variant: "info"
-        })
-          this.$emit("newHistory", response.data);
-        })
-        .catch((response) => {
-          this.$bvToast.toast(`Error while saving nets`, {
-          title: 'Save Failed',
-          autoHideDelay: 5000,
-          appendToast: true,
-          noCloseButton: true,
-          variant: "danger"
-        })
+          variant: "danger",
         });
+      } else {
+        let sessionsList = [];
+        for (let session of this.selectedSession) {
+          let tempSession = {};
+          tempSession["id"] = session.id;
+          tempSession["net"] = session.net;
+          tempSession["player"] = { playerId: session.player };
+          tempSession["quantity"] = session.quantity;
+          tempSession["season"] = this.selectedSeason;
+          tempSession["week"] = this.selectedWeek;
+          tempSession["team"] =
+            session.team != null
+              ? session.team
+              : { teamId: this.$store.state.currentTeam.teamId };
+          sessionsList.push(tempSession);
+        }
+        const headers = {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + this.$store.state.jwtToken,
+        };
+        await axios
+          .post(
+            process.env.VUE_APP_ROOT_API + "saveMultipleSessions",
+            sessionsList,
+            { headers: headers }
+          )
+          .then((response) => {
+            this.$bvToast.toast(`Nets saved successfully`, {
+              title: "Save Success",
+              autoHideDelay: 5000,
+              appendToast: true,
+              noCloseButton: true,
+              variant: "info",
+            });
+            this.$emit("newHistory", response.data);
+          })
+          .catch((response) => {
+            this.$bvToast.toast(`Error while saving nets`, {
+              title: "Save Failed",
+              autoHideDelay: 5000,
+              appendToast: true,
+              noCloseButton: true,
+              variant: "danger",
+            });
+          });
       }
+      this.show=false;
     },
-    isValidNets(){
+    isValidNets() {
       let quantity = 0;
-      for (let session of this.selectedSession){
+      for (let session of this.selectedSession) {
         quantity += session.quantity;
-        if (quantity > 10)
-          return false;
+        if (quantity > 10) return false;
       }
       return true;
     },
-    isValidSession(){
-      for (let session of this.selectedSession){
-        if (session.id == '' && session.quantity == 0)
-          return false;
-        if (session.player == '' || session.net == '' )
-          return false;
-      } 
+    isValidSession() {
+      for (let session of this.selectedSession) {
+        if (session.id == "" && session.quantity == 0) return false;
+        if (session.player == "" || session.net == "") return false;
+      }
       return true;
     },
-    canSave(){
+    canSave() {
       return this.isValidNets() && this.isValidSession();
-    }
+    },
   },
   data() {
     return {
+      show: false,
       selectedSession: [],
       weeks: [16, 15, 14, 13, 12, 11, 10, 9, 8, 7, 6, 5, 4, 3, 2, 1],
       trainingSkills: [
@@ -268,7 +281,7 @@ export default {
         "Batting",
         "Bowling",
         "Fielding",
-        {value:"WicketKeeping", text:"Wicket Keeping"},
+        { value: "WicketKeeping", text: "Wicket Keeping" },
       ],
       netQuantity: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
     };

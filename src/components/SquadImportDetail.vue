@@ -107,10 +107,6 @@ import axios from "axios";
 
 export default {
   name: "SquadImportDetail",
-  data() {
-    return {
-    };
-  },
   props: {
       player: Object
     },

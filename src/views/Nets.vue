@@ -9,7 +9,14 @@
       </b-row>
       <b-row>
         <b-col class="mt-4">
+           <b-overlay
+            :show="show"
+            variant="dark"
+            opacity="0.9"
+            spinner-variant="secondary"
+          >
           <SquadNetsHistory v-if="trainingHistory" v-bind:trainingHistory="trainingHistory" v-bind:squad="squad" />
+           </b-overlay>
         </b-col>
       </b-row>
     </b-container>
@@ -26,7 +33,8 @@ export default {
   components: { NavigationBar, RecordNets, SquadNetsHistory },
   data() {
     return {
-      trainingHistory: undefined
+      trainingHistory: undefined,
+      show: true
     };
   },
   computed:{
@@ -59,6 +67,7 @@ export default {
       await axios.post(process.env.VUE_APP_ROOT_API + "getAllTrainingSession", {"teamId": this.$store.state.currentTeam.teamId} , { headers: headers })
             .then(response => {
                 this.trainingHistory = response.data;
+                this.show = false;
                 })
             .catch(response => {console.log(response)});
     },

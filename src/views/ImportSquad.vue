@@ -4,9 +4,15 @@
     <b-container fluid>
       <SquadImportInput @parseResult="parseResult($event)" />
       <b-row v-if="players.length > 0" class="mt-4">
-          <b-col align-self="end"><b-button block variant="secondary" v-on:click="saveSquad()"
+          <b-col align-self="end"><b-overlay
+                  :show="show"
+                  variant="dark"
+                  opacity="0.9"
+                  spinner-small
+                  spinner-variant="secondary"
+                ><b-button block variant="secondary" v-on:click="saveSquad()"
                     >Import Squad</b-button
-                  ></b-col>
+                  ></b-overlay></b-col>
           <b-col> </b-col>
           <b-col></b-col>
           <b-col></b-col>
@@ -30,6 +36,7 @@ export default {
   data(){
     return{
       players: [],
+      show: false
     }
   },
   methods: {
@@ -37,6 +44,7 @@ export default {
       this.players = parseResult;
     },
     async saveSquad() {
+      this.show = true;
       const headers = {
         "Content-Type": "application/json",
         'Authorization': 'Bearer ' + this.$store.state.jwtToken
@@ -67,6 +75,7 @@ export default {
           variant: "danger"
         })
         });
+        this.show = false;
     },
   }
 };

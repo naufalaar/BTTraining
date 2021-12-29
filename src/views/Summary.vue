@@ -5,25 +5,173 @@
       <b-row align-v="stretch">
         <b-col>
           <b-row align-v="stretch">
-            <b-col><SquadInfoNumber v-bind:value="summary.players" title="Players" /> </b-col>
-            <b-col><SquadInfoWage v-bind:value="summary.wages" title="Total Wages"/> </b-col>
-            <b-col><SquadInfoNumber v-bind:value="summary.lhBatters" title="LH Batters" /> </b-col>
-            <b-col><SquadInfoNumber v-bind:value="summary.rhBatters" title="RH Batters" /> </b-col>
-            <b-col><SquadInfoNumber v-bind:value="summary.wicketKeepers" title="WK" /> </b-col>
+            <b-col>
+              <b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoNumber
+                  v-bind:value="summary.players"
+                  title="Players"
+              /></b-overlay>
+            </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoWage
+                  v-bind:value="summary.wages"
+                  title="Total Wages"
+              /></b-overlay>
+            </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoNumber
+                  v-bind:value="summary.lhBatters"
+                  title="LH Batters"
+              /></b-overlay>
+            </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoNumber
+                  v-bind:value="summary.rhBatters"
+                  title="RH Batters"
+              /></b-overlay>
+            </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoNumber
+                  v-bind:value="summary.wicketKeepers"
+                  title="WK"
+              /></b-overlay>
+            </b-col>
           </b-row>
           <b-row align-v="stretch">
-            <b-col><SquadInfoNumber v-bind:value="summary.bowlers" title="Bowlers" /> </b-col>
-            <b-col><SquadInfoNumber v-bind:value="summary.fBowlers" title="Fast" /> </b-col>
-            <b-col><SquadInfoNumber v-bind:value="summary.fmBowlers" title="Fast Medium" /> </b-col>
-            <b-col><SquadInfoNumber v-bind:value="summary.mBowlers" title="Medium" /> </b-col>
-            <b-col><SquadInfoNumber v-bind:value="summary.spinBowlers" title="Spin" /> </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoNumber
+                  v-bind:value="summary.bowlers"
+                  title="Bowlers"
+              /></b-overlay>
+            </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoNumber v-bind:value="summary.fBowlers" title="Fast"
+              /></b-overlay>
+            </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoNumber
+                  v-bind:value="summary.fmBowlers"
+                  title="Fast Medium"
+              /></b-overlay>
+            </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoNumber
+                  v-bind:value="summary.mBowlers"
+                  title="Medium"
+              /></b-overlay>
+            </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoNumber
+                  v-bind:value="summary.spinBowlers"
+                  title="Spin"
+              /></b-overlay>
+            </b-col>
           </b-row>
           <b-row align-v="stretch">
-            <b-col><SquadInfoText v-bind:value="summary.avgBatting" title="Avg. Batting" /> </b-col>
-            <b-col><SquadInfoText v-bind:value="summary.avgBowling" title="Avg. Bowling" /> </b-col>
-            <b-col><SquadInfoText v-bind:value="summary.avgStamina" title="Avg. Stamina"  /> </b-col>
-            <b-col><SquadInfoText v-bind:value="summary.avgFielding" title="Avg. Fielding"  /> </b-col>
-            <b-col><SquadInfoText v-bind:value="summary.avgExperience" title="Avg. Exp." /> </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoText
+                  v-bind:value="summary.avgBatting"
+                  title="Avg. Batting"
+              /></b-overlay>
+            </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoText
+                  v-bind:value="summary.avgBowling"
+                  title="Avg. Bowling"
+              /></b-overlay>
+            </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoText
+                  v-bind:value="summary.avgStamina"
+                  title="Avg. Stamina"
+              /></b-overlay>
+            </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoText
+                  v-bind:value="summary.avgFielding"
+                  title="Avg. Fielding"
+              /></b-overlay>
+            </b-col>
+            <b-col
+              ><b-overlay
+                :show="show"
+                variant="dark"
+                opacity="0.9"
+                spinner-variant="secondary"
+                ><SquadInfoText
+                  v-bind:value="summary.avgExperience"
+                  title="Avg. Exp."
+              /></b-overlay>
+            </b-col>
           </b-row>
         </b-col>
       </b-row>
@@ -32,37 +180,66 @@
 </template>
 
 <script>
-import axios from 'axios';
+import axios from "axios";
 
 import NavigationBar from "../components/NavigationBar.vue";
 import SquadInfoNumber from "../components/SquadInfoNumber.vue";
-import SquadInfoText from "../components/SquadInfoText.vue"
-import SquadInfoWage from "../components/SquadInfoWage.vue"
+import SquadInfoText from "../components/SquadInfoText.vue";
+import SquadInfoWage from "../components/SquadInfoWage.vue";
 
 export default {
   name: "Summary",
   components: { NavigationBar, SquadInfoNumber, SquadInfoText, SquadInfoWage },
   methods: {
-    async getSummary(){
+    async getSummary() {
       const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': 'Bearer ' + this.$store.state.jwtToken
-    }
-      axios.post(process.env.VUE_APP_ROOT_API + "teamSummary", {teamId: this.$store.state.currentTeam.teamId}, { headers: headers })
-            .then(response => {
-                this.summary = response.data;
-                })
-            .catch(response => {console.log(response)});
-    }
-    
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.$store.state.jwtToken,
+      };
+      let valid = false;
+      await axios
+        .post(
+          process.env.VUE_APP_ROOT_API + "teamSummary",
+          { teamId: this.$store.state.currentTeam.teamId },
+          { headers: headers }
+        )
+        .then((response) => {
+          this.summaryResult = response.data;
+          valid = true;
+        })
+        .catch((response) => {
+          console.log(response);
+        });
+      if (valid){
+        await axios
+        .post(
+          process.env.VUE_APP_ROOT_API + "teamPlayers",
+          { teamId: this.$store.state.currentTeam.teamId },
+          { headers: headers }
+        )
+        .then((response) => {
+          this.$store.dispatch("setSquad", response.data);
+          this.show = false;
+        })
+        .catch((response) => {
+          console.log(response);
+        });
+      }
+    },
   },
-  mounted(){
+  mounted() {
     this.getSummary();
   },
-  data(){
-    return{
-      summary: {},      
-    }
-  }
+  computed: {
+    summary() {
+      return this.summaryResult;
+    },
+  },
+  data() {
+    return {
+      summaryResult: {},
+      show: true,
+    };
+  },
 };
 </script>

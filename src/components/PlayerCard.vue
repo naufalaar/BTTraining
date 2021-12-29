@@ -4,7 +4,7 @@
       <b-card-text>
         <h1 class="text-secondary">
           {{ player.firstName }} {{ player.lastName }}
-          <b-badge pill variant="secondary"> {{ player.playerType }} </b-badge>
+          <b-badge pill variant="secondary"> {{ player.playerType }} <span v-if="player.playerStatus != 'Active'"> - {{ player.playerStatus }}</span></b-badge>
         </h1>
         <h5>
           <span class="text-secondary">{{ player.age }} Year Old </span>
@@ -62,31 +62,54 @@
             </h5></b-col
           >
           <b-col align-self="center" class="text-center">
-            <h6 v-if="previousChanges[camelCase(skill)]" > 
-              <span :class="previousChanges[camelCase(skill)].type == 'pop' ? 'text-secondary' : 'text-danger'">S{{ previousChanges[camelCase(skill)].season }} W{{ previousChanges[camelCase(skill)].week }}</span>
+            <h6 v-if="previousChanges[camelCase(skill)]">
+              <span
+                :class="
+                  previousChanges[camelCase(skill)].type == 'pop'
+                    ? 'text-secondary'
+                    : 'text-danger'
+                "
+                >S{{ previousChanges[camelCase(skill)].season }} W{{
+                  previousChanges[camelCase(skill)].week
+                }}</span
+              >
             </h6>
             <h6 v-else class="text-info">No Pop / Plop History</h6>
           </b-col>
           <b-col align-self="center"
-            ><b-button
-              v-on:click="recordChange(skill, 'pop')"
-              :disabled="isMaxSkill(skill)"
-              size="sm"
-              block
-              type="submit"
-              variant="outline-secondary"
-              >Pop!</b-button
+            ><b-overlay
+              :show="show"
+              variant="dark"
+              opacity="0.9"
+              spinner-small
+              spinner-variant="secondary"
+              ><b-button
+                v-on:click="recordChange(skill, 'pop')"
+                :disabled="isMaxSkill(skill) || player.playerStatus != 'Active'"
+                size="sm"
+                block
+                type="submit"
+                variant="outline-secondary"
+                >Pop!</b-button
+              ></b-overlay
             >
           </b-col>
           <b-col align-self="center"
-            ><b-button
-              v-on:click="recordChange(skill, 'plop')"
-              :disabled="isMinSkill(skill)"
-              size="sm"
-              block
-              type="submit"
-              variant="outline-danger"
-              >Plop!</b-button
+            ><b-overlay
+              :show="show"
+              variant="dark"
+              opacity="0.9"
+              spinner-small
+              spinner-variant="secondary"
+              ><b-button
+                v-on:click="recordChange(skill, 'plop')"
+                :disabled="isMinSkill(skill) || player.playerStatus != 'Active'"
+                size="sm"
+                block
+                type="submit"
+                variant="outline-danger"
+                >Plop!</b-button
+              ></b-overlay
             ></b-col
           >
           <b-col></b-col>
@@ -106,6 +129,7 @@ export default {
   },
   data() {
     return {
+      show: false,
       playerSkills: [
         "Stamina",
         "Batting",
@@ -129,15 +153,14 @@ export default {
     },
   },
   methods: {
-    findLastPops(){
+    findLastPops() {
       let results = {};
       for (let skill of this.playerSkills) {
         skill = this.camelCase(skill);
         let result = this.player.playerSkillChanges.filter(function (a) {
           return a["skill"] == skill ? true : false;
         });
-        if (result[0] != undefined)
-          results[result[0].skill] = result[0];
+        if (result[0] != undefined) results[result[0].skill] = result[0];
       }
       return results;
     },
@@ -159,6 +182,7 @@ export default {
         .replace(/\s+/g, "");
     },
     async recordChange(skill, type) {
+      this.show = true;
       const headers = {
         "Content-Type": "application/json",
         Authorization: "Bearer " + this.$store.state.jwtToken,
@@ -190,11 +214,18 @@ export default {
           headers: headers,
         })
         .then((response) => {
-           this.$store.dispatch("setSquad", response.data);
+          this.$store.dispatch("setSquad", response.data);
         })
-        .catch((response) => {
-          console.log(response);
+        .catch(() => {
+          this.$bvToast.toast(`Error while saving ` + type, {
+              title: "Save Failed",
+              autoHideDelay: 5000,
+              appendToast: true,
+              noCloseButton: true,
+              variant: "danger",
+            });
         });
+      this.show = false;
     },
   },
 };

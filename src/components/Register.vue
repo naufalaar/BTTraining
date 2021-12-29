@@ -1,6 +1,13 @@
 <template>
   <div>
     <b-alert
+      :show="validation.invalid"
+      class="position-fixed fixed-top m-0 rounded-0"
+      style="z-index: 2000"
+      variant="danger"
+      >Username and / or Team ID already exists. Please try logging in.</b-alert
+    >
+    <b-alert
       :show="validation.serverError"
       class="position-fixed fixed-top m-0 rounded-0"
       style="z-index: 2000"
@@ -110,7 +117,15 @@
           </b-form-group>
         </b-col>
       </b-row>
+      <b-overlay
+            :show="show"
+            variant="dark"
+            opacity="0.9"
+            spinner-small
+            spinner-variant="secondary"
+          >
       <b-button block type="submit" variant="secondary">Register</b-button>
+      </b-overlay>
     </b-form>
   </div>
 </template>
@@ -121,6 +136,7 @@ export default {
   name: "Register",
   data() {
     return {
+      show: false,
       manager: {
         username: "",
         password: "",
@@ -141,22 +157,38 @@ export default {
         franchiseId: undefined,
         franchiseName: undefined,
         serverError: false,
+        invalid: false,
       },
     };
   },
   methods: {
     async validateLogin() {
+      this.show = true;
       this.validation.serverError = false;
+      this.validation.invalid = false;
       if (this.isValid()) {
         await axios
           .post(process.env.VUE_APP_ROOT_API + "sign-up", this.manager)
           .then((response) => {
-            console.log("Registered");
+            this.$bvToast.toast(
+              `Manager ${this.manager.username} registered successfully. Please login`,
+              {
+                title: "Registration Success",
+                autoHideDelay: 5000,
+                appendToast: true,
+                noCloseButton: true,
+                variant: "info",
+              }
+            );
+            this.$emit("registered");
           })
           .catch((error) => {
-            this.validation.serverError = true;
+            if (String(error).indexOf("500") > -1)
+              this.validation.invalid = true;
+            else this.validation.serverError = true;
           });
       }
+      this.show = false;
     },
     isValid() {
       if (this.manager.username.length == 0) this.validation.username = false;
@@ -185,7 +217,7 @@ export default {
 
       if (
         (this.manager.franchise.teamId.length == 0 &&
-        this.manager.franchise.teamName.length > 0) ||
+          this.manager.franchise.teamName.length > 0) ||
         isNaN(this.manager.franchise.teamId)
       )
         this.validation.franchiseId = false;

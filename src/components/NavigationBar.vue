@@ -33,10 +33,10 @@
         <b-nav-item to="/importPlayer" exact exact-active-class="active"
           >Import Player</b-nav-item
         >
-        <!-- <b-nav-item to="/manageTeam" exact exact-active-class="active"
+        <b-nav-item to="/manageTeam" exact exact-active-class="active"
           >Manage Team</b-nav-item
-        > -->
-        <b-nav-item v-on:click="switchTeam" 
+        >
+        <b-nav-item v-if="hasFranchise()" v-on:click="switchTeam" 
           >Switch Team</b-nav-item
         >
         <b-nav-item v-on:click="logout()">Logout</b-nav-item>
@@ -47,9 +47,15 @@
 
 <script>
 import router from "../router";
+import axios from "axios";
 
 export default {
   name: "NavigationBar",
+  data(){
+    return{
+      show: false
+    }
+  },
   computed: {
     currentTeam(){
       return this.$store.state.currentTeam;
@@ -60,11 +66,11 @@ export default {
   },
   methods: {
     logout() {
-      this.$store.state.jwtToken = "";
+      this.$store.dispatch("logout");
       sessionStorage.clear();
       router.push("/");
     },
-    switchTeam(){
+    async switchTeam(){
       let team = this.currentTeam;
       if(this.currentTeam.type == "Main"){
         team = this.$store.state.contextManager.franchise;
@@ -73,8 +79,35 @@ export default {
         team = this.$store.state.contextManager.mainTeam;
         team["type"] = "Main";
       }
-      this.$store.dispatch("setTeam",team);
-      this.$router.go(this.$router.currentRoute);
+      
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.$store.state.jwtToken,
+      };
+      await axios
+        .post(
+          process.env.VUE_APP_ROOT_API + "teamPlayers",
+          { teamId: team.teamId },
+          { headers: headers }
+        )
+        .then((response) => {
+          this.$store.dispatch("setTeam",team);
+          this.$store.dispatch("setSquad", response.data);
+          this.$router.go(this.$router.currentRoute);
+        })
+        .catch((response) => {
+          this.$bvToast.toast(`Unable to connect to server`, {
+            title: "Unable to Switch Teams ",
+            autoHideDelay: 5000,
+            appendToast: true,
+            noCloseButton: true,
+            variant: "danger",
+          });
+        });
+      
+    },
+    hasFranchise(){
+      return this.$store.state.contextManager.franchise != null
     }
   },
 };

@@ -150,6 +150,13 @@ export default new Vuex.Store({
     setCurrentWeek({commit}, currentWeek){
       commit('SET_CURRENT_WEEK', currentWeek)
     },
+    logout({commit}){
+      commit('SET_TOKEN',"");
+      commit('SET_MANAGER', "");
+      commit('SET_TEAM', "");
+      commit('SET_SQUAD', "");
+      commit('SET_CURRENT_WEEK', "");
+    },
   },
   modules: {},
   getters: {

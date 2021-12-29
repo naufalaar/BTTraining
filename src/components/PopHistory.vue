@@ -1,6 +1,6 @@
 <template>
   <div>
-    <b-card bg-variant="primary" text-variant="light">
+    <b-card bg-variant="primary" text-variant="light" class="border-0">
       <b-card-text>
         <h1 class="text-secondary">Skill Change History</h1>
         <br />

@@ -5,7 +5,9 @@
       class="position-fixed fixed-top m-0 rounded-0"
       style="z-index: 2000"
       variant="danger"
-    >Username and/or password incorrect. Please check your credentials</b-alert>
+      >Username and / or password incorrect. Please check your
+      credentials</b-alert
+    >
     <b-alert
       :show="validation.serverError"
       class="position-fixed fixed-top m-0 rounded-0"
@@ -50,7 +52,15 @@
           Please enter your password
         </b-form-invalid-feedback>
       </b-form-group>
+       <b-overlay
+            :show="show"
+            variant="dark"
+            opacity="0.9"
+            spinner-small
+            spinner-variant="secondary"
+          >
       <b-button block type="submit" variant="secondary">Login</b-button>
+       </b-overlay>
     </b-form>
   </div>
 </template>
@@ -63,6 +73,7 @@ export default {
   name: "LoginForm",
   data() {
     return {
+      show: false,
       credentials: {
         username: "",
         password: "",
@@ -77,9 +88,12 @@ export default {
   },
   methods: {
     async validateLogin() {
+      this.show = true;
       this.validation.invalid = false;
       this.validation.serverError = false;
       if (this.isValid()) {
+        let valid = false;
+        // API call to login
         await axios
           .post(process.env.VUE_APP_ROOT_API + "login", this.credentials)
           .then((response) => {
@@ -87,60 +101,59 @@ export default {
               "setToken",
               response.headers.authorization.split(" ")[1]
             );
-            const headers = {
-              "Content-Type": "application/json",
-              Authorization: response.headers.authorization,
-            };
-            axios
-              .post(
-                process.env.VUE_APP_ROOT_API + "getManagerByUsername",
-                { username: this.credentials.username },
-                { headers: headers }
-              )
-              .then((response) => {
-                  response.data.password="",
-                this.$store.dispatch(
-                  "setManager",
-                  response.data
-                );
-                let mainTeam = response.data.mainTeam;
-                mainTeam["type"] = "Main";
-                this.$store.dispatch(
-                  "setTeam",
-                  mainTeam
-                );
-              })
-              .catch((error) => {
-                if (String(error).indexOf("403") > -1)
-                  this.validation.invalid = true;
-                else this.validation.serverError = true;
-              });
-              axios
-              .post(
-                process.env.VUE_APP_ROOT_API + "getCurrentWeek",
-                null,
-                { headers: headers }
-              )
-              .then((response) => {
-                this.$store.dispatch(
-                  "setCurrentWeek",
-                  {"season": response.data[0],"week": response.data[1]}
-                );
-                router.push("/summary");
-              })
-              .catch((error) => {
-                if (String(error).indexOf("403") > -1)
-                  this.validation.invalid = true;
-                else this.validation.serverError = true;
-              });
+            valid = true;
           })
           .catch((error) => {
-            console.log(error);
             if (String(error).indexOf("403") > -1)
               this.validation.invalid = true;
             else this.validation.serverError = true;
           });
+        if (valid) {
+          const headers = {
+            "Content-Type": "application/json",
+            Authorization: "Bearer " + this.$store.state.jwtToken,
+          };
+          // API call to get Manager
+          await axios
+            .post(
+              process.env.VUE_APP_ROOT_API + "getManagerByUsername",
+              { username: this.credentials.username },
+              { headers: headers }
+            )
+            .then((response) => {
+              (response.data.password = ""),
+                this.$store.dispatch("setManager", response.data);
+              let mainTeam = response.data.mainTeam;
+              mainTeam["type"] = "Main";
+              console.log("Team Set");
+              this.$store.dispatch("setTeam", mainTeam);
+            })
+            .catch((error) => {
+              if (String(error).indexOf("403") > -1)
+                this.validation.invalid = true;
+              else this.validation.serverError = true;
+            });
+          // API call to get Week
+          await axios
+            .post(process.env.VUE_APP_ROOT_API + "getCurrentWeek", null, {
+              headers: headers,
+            })
+            .then((response) => {
+              this.$store.dispatch("setCurrentWeek", {
+                season: response.data[0],
+                week: response.data[1],
+              });
+            })
+            .catch((error) => {
+              if (String(error).indexOf("403") > -1)
+                this.validation.invalid = true;
+              else this.validation.serverError = true;
+            });
+        }
+        if (!(this.validation.invalid || this.validation.serverError))
+          router.push("/summary");
       }
+      this.show=false;
     },
     isValid() {
       let userLength = this.credentials.username.length;

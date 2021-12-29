@@ -16,8 +16,21 @@
             <b-row>
               <b-col></b-col>
               <b-col cols="2">
-                <b-button block class="mt-3" variant="secondary" type="submit" :disabled="textEntered==0"
-                  >Extract Player Details</b-button
+                <b-overlay
+                  :show="show"
+                  variant="dark"
+                  opacity="0.9"
+                  spinner-small
+                  spinner-variant="secondary"
+                >
+                  <b-button
+                    block
+                    class="mt-3"
+                    variant="secondary"
+                    type="submit"
+                    :disabled="textEntered == 0"
+                    >Extract Player Details</b-button
+                  ></b-overlay
                 >
               </b-col>
             </b-row>
@@ -37,34 +50,39 @@ export default {
     return {
       textEntered: "",
       parseResult: "",
+      show: false,
     };
   },
   methods: {
     async importPlayer() {
-        const headers = {
-          "Content-Type": "application/json",
-          Authorization: "Bearer " + this.$store.state.jwtToken,
-        };
-        await axios
-          .post(
-            process.env.VUE_APP_ROOT_API + "parsePlayer",
-            this.textEntered.replace(/\n/g, " "),
-            { headers: headers }
-          )
-          .then((response) => {
-            this.parseResult = response.data;
-            this.parseResult.team = { teamId: this.$store.state.currentTeam.teamId };
-          })
-          .catch((response) => {
-            this.$bvToast.toast(`Error while parsing player`, {
-          title: 'Parsing Failed',
-          autoHideDelay: 5000,
-          appendToast: true,
-          noCloseButton: true,
-          variant: "danger"
+      this.show = true;
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + this.$store.state.jwtToken,
+      };
+      await axios
+        .post(
+          process.env.VUE_APP_ROOT_API + "parsePlayer",
+          this.textEntered.replace(/\n/g, " "),
+          { headers: headers }
+        )
+        .then((response) => {
+          this.parseResult = response.data;
+          this.parseResult.team = {
+            teamId: this.$store.state.currentTeam.teamId,
+          };
         })
+        .catch((response) => {
+          this.$bvToast.toast(`Error while parsing player`, {
+            title: "Parsing Failed",
+            autoHideDelay: 5000,
+            appendToast: true,
+            noCloseButton: true,
+            variant: "danger",
           });
-        this.$emit("parseResult", this.parseResult);
+        });
+      this.$emit("parseResult", this.parseResult);
+      this.show = false;
     },
   },
 };

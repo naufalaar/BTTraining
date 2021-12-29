@@ -3,8 +3,7 @@
     <b-card bg-variant="primary" text-variant="light">
       <b-card-text>
         <h2 class="text-secondary">
-          {{ player.firstName }} {{ player.lastName }} <b-badge pill variant="secondary" > {{ player.playerType }} </b-badge>
-         
+          {{ player.firstName }} {{ player.lastName }} <b-badge pill variant="secondary" > {{ player.playerType }} </b-badge> <b-badge v-if="player.playerStatus != 'Active'" pill variant="warning"> {{ player.playerStatus }} </b-badge>
         </h2>
         <h5>
           <span class="text-secondary">{{ player.age }} Year Old </span>
