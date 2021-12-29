@@ -65,18 +65,32 @@
           label="Previous Skill:"
           label-for="previous"
         >
+         <b-form-select
+            id="previous"
+            :options="staminaSkills"
+            v-model="selectedPreviousSkill"
+            v-if="selectedSkill == 'stamina'"
+          ></b-form-select>
           <b-form-select
             id="previous"
             :options="skills"
             v-model="selectedPreviousSkill"
+            v-else
           ></b-form-select> </b-form-group
       ></b-col>
       <b-col
         ><b-form-group id="input-new" label="New Skill:" label-for="new">
           <b-form-select
             id="new"
+            :options="staminaSkills"
+            v-model="selectedNewSkill"
+            v-if="selectedSkill == 'stamina'"
+          ></b-form-select>
+          <b-form-select
+            id="new"
             :options="skills"
             v-model="selectedNewSkill"
+            v-else
           ></b-form-select> </b-form-group
       ></b-col>
       <b-col
@@ -109,8 +123,8 @@ export default {
       show: false,
       selectedPlayer: 0,
       selectedSkill: "stamina",
-      selectedSeason: 52,
-      selectedWeek: 1,
+      selectedSeason: this.$store.state.currentWeek.season,
+      selectedWeek: this.$store.state.currentWeek.week,
       selectedPreviousSkill: "worthless",
       selectedNewSkill: "abysmal",
       selectedType: "pop",
@@ -177,7 +191,7 @@ export default {
     },
     async addSkillChange() {
       this.show = true;
-      if (this.isValid) {
+      if (this.isValid()) {
         const headers = {
           "Content-Type": "application/json",
           Authorization: "Bearer " + this.$store.state.jwtToken,

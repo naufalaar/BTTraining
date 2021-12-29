@@ -12,7 +12,7 @@
           nav-wrapper-class="w-25"
         >
           <b-tab title="Edit Player" :title-link-class="linkClass(0)" lazy>
-            <b-card-text>Cryptix hasn't implemented me yet</b-card-text>
+            <b-card-text><EditPlayer /></b-card-text>
           </b-tab>
           <b-tab title="Delete Player" :title-link-class="linkClass(1)" lazy>
             <b-card-text><RemovePlayer /></b-card-text>
@@ -37,9 +37,10 @@ import NavigationBar from "../components/NavigationBar.vue";
 import AddSkillChange from "../components/AddSkillChange.vue";
 import RemoveSkillChange from "../components/RemoveSkillChange.vue";
 import RemovePlayer from "../components/RemovePlayer.vue";
+import EditPlayer from "../components/EditPlayer.vue";
 
 export default {
-  components: { NavigationBar, AddSkillChange, RemoveSkillChange, RemovePlayer },
+  components: { NavigationBar, AddSkillChange, RemoveSkillChange, RemovePlayer, EditPlayer },
   data() {
     return {
       tabIndex: 0,

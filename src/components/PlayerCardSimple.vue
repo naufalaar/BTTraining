@@ -3,7 +3,7 @@
     <b-card bg-variant="primary" text-variant="light">
       <b-card-text>
         <h2 class="text-secondary">
-          {{ player.firstName }} {{ player.lastName }} <b-badge pill variant="secondary" > {{ player.playerType }} </b-badge> <b-badge v-if="player.playerStatus != 'Active'" pill variant="warning"> {{ player.playerStatus }} </b-badge>
+          <b-link :to="{ path: '/player/' + player.playerId }">{{ player.firstName }} {{ player.lastName }}</b-link> <b-badge pill variant="secondary" > {{ player.playerType }} </b-badge> <b-badge v-if="player.playerStatus != 'Active'" pill variant="warning"> {{ player.playerStatus }} </b-badge>
         </h2>
         <h5>
           <span class="text-secondary">{{ player.age }} Year Old </span>
@@ -94,5 +94,11 @@ export default {
 <style scoped>
 .capitalize {
   text-transform: capitalize;
+}
+a {
+  color: var(--secondary);
+}
+a:hover{
+  text-decoration: none;
 }
 </style>

@@ -186,7 +186,7 @@ export default {
         })
         .then((response) => {
           this.$bvToast.toast(
-            `Player ${response.data.firstName} ${response.data.lastName} imported successfully`,
+            `Player ${this.player.firstName} ${this.player.lastName} imported successfully`,
             {
               title: "Import Success",
               autoHideDelay: 5000,
@@ -195,7 +195,8 @@ export default {
               variant: "info",
             }
           );
-          this.player = response.data;
+          console.log(response.data);
+          this.$store.dispatch("setSquad", response.data);
         })
         .catch((response) => {
           this.$bvToast.toast(`Error while importing player`, {

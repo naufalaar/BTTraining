@@ -92,11 +92,11 @@ export default {
     };
   },
   computed: {
-    rows() {
-      return this.squad.length;
-    },
     squad() {
       return this.$store.state.squad;
+    },
+    rows() {
+      return this.squad.length;
     },
   },
   methods: {

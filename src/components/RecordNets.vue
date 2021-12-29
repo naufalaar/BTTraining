@@ -238,7 +238,9 @@ export default {
               noCloseButton: true,
               variant: "info",
             });
-            this.$emit("newHistory", response.data);
+            // this.$emit("newHistory", response.data);
+            this.$store.dispatch("setSquad", response.data);
+            this.$router.go(this.$router.currentRoute);
           })
           .catch((response) => {
             this.$bvToast.toast(`Error while saving nets`, {

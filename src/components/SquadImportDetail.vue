@@ -2,7 +2,7 @@
   <div>
     <b-card bg-variant="primary" text-variant="light" class="mt-4">
       <b-card-text>
-        <b-form @submit.prevent="savePlayer()">
+        <b-form>
         <b-row class="py-2">
           <b-col>
             <label for="playerId">First Name:</label>
@@ -103,44 +103,12 @@
 </template>
 
 <script>
-import axios from "axios";
 
 export default {
   name: "SquadImportDetail",
   props: {
       player: Object
     },
-  methods: {
-    async savePlayer() {
-      const headers = {
-        "Content-Type": "application/json",
-        'Authorization': 'Bearer ' + this.$store.state.jwtToken
-      };
-      await axios
-        .post(
-          process.env.VUE_APP_ROOT_API + "savePlayer",
-          this.player,
-          { headers: headers }
-        )
-        .then((response) => {
-          this.$bvToast.toast(`Player ${response.data.firstName} ${response.data.lastName} imported successfully`, {
-          title: 'Import Success',
-          autoHideDelay: 5000,
-          appendToast: true,
-          variant: "info"
-        })
-          this.player = response.data;
-        })
-        .catch((response) => {
-          this.$bvToast.toast(`Error while importing player`, {
-          title: 'Import Failed',
-          autoHideDelay: 5000,
-          appendToast: true,
-          variant: "danger"
-        })
-        });
-    },
-  },
   computed: {
     age: function () {
       return this.$store.state.age;

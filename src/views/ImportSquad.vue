@@ -63,7 +63,7 @@ export default {
           noCloseButton: true,
           variant: "info"
         })
-          this.player = response.data;
+          this.$store.dispatch("setSquad", response.data);
         })
         .catch((response) => {
           console.log(response);

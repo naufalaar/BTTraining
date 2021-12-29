@@ -6,7 +6,6 @@
         <b-link
           v-for="player in squad"
           :key="player.playerId"
-          class="text-light text-decoration-none"
           active-class="active"
           variant="link"
           :to="{ path: '/player/' + player.playerId }"
@@ -36,8 +35,12 @@ export default {
 </script>
 
 <style scoped>
-.btn-link:active {
+a {
+  color: var(--light);
+}
+a:hover{
   color: var(--secondary);
+  text-decoration: none;
 }
 </style>
 
