@@ -9,6 +9,7 @@ import ImportPlayer from "../views/ImportPlayer.vue";
 import CoachAnalysis from "../views/CoachAnalysis.vue";
 import ManageTeam from "../views/ManageTeam.vue";
 import Login from "../views/Login.vue";
+import Help from "../views/Help.vue";
 
 import store from '../store/index.js';
 
@@ -59,6 +60,11 @@ const routes = [
     path: "/manageTeam",
     name: "ManageTeam",
     component: ManageTeam,
+  },
+  {
+    path: "/help",
+    name: "Help",
+    component: Help,
   },
 ];
 

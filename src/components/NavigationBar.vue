@@ -39,6 +39,9 @@
         <b-nav-item v-if="hasFranchise()" v-on:click="switchTeam" 
           >Switch Team</b-nav-item
         >
+        <b-nav-item to="/help" exact exact-active-class="active"
+          >Help</b-nav-item
+        >
         <b-nav-item v-on:click="logout()">Logout</b-nav-item>
       </b-navbar-nav>
     </b-collapse>

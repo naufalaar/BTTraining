@@ -11,21 +11,17 @@
           end
           nav-wrapper-class="w-25"
         >
-          <b-tab title="Edit Player" :title-link-class="linkClass(0)" lazy>
-            <b-card-text><EditPlayer /></b-card-text>
-          </b-tab>
-          <b-tab title="Delete Player" :title-link-class="linkClass(1)" lazy>
-            <b-card-text><RemovePlayer /></b-card-text>
-          </b-tab>
-          <b-tab title="Add Pop/Plop" :title-link-class="linkClass(2)" lazy>
-            <b-card-text><AddSkillChange /></b-card-text>
-          </b-tab>
-          <b-tab title="Delete Pop/Plop" :title-link-class="linkClass(3)" lazy>
-            <b-card-text><RemoveSkillChange /></b-card-text>
-          </b-tab>
-          <b-tab title="End Season" :title-link-class="linkClass(4)" lazy>
-            <b-card-text>Cryptix hasn't implemented me yet</b-card-text>
-          </b-tab>
+          <div v-for="(value, index) in tabs" v-bind:key="index">
+              <b-tab
+                :title="value.tabName"
+                :title-link-class="linkClass(index)"
+                lazy
+              >
+                <b-card-text>
+                  <component :is="value.compName"></component
+                ></b-card-text>
+              </b-tab>
+            </div>
         </b-tabs>
       </b-card>
     </b-container>
@@ -44,6 +40,12 @@ export default {
   data() {
     return {
       tabIndex: 0,
+      tabs: [
+        { tabName: "Edit Player", compName: "EditPlayer" },
+        { tabName: "Delete Player", compName: "RemovePlayer" },
+        { tabName: "Add Pop/Plop", compName: "AddSkillChange" },
+        { tabName: "Delete Pop/Plop", compName: "RemoveSkillChange" },
+      ],
     };
   },
   methods: {
