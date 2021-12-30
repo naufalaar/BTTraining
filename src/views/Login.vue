@@ -15,8 +15,9 @@
                     ><b-card-text><LoginForm /></b-card-text
                   ></b-tab>
                   <b-tab title="Register" :title-link-class="linkClass(1)"
-                    ><b-card-text><Register @registered="registered()"/></b-card-text></b-tab
-                  >
+                    ><b-card-text
+                      ><Register @registered="registered()" /></b-card-text
+                  ></b-tab>
                 </b-tabs>
               </b-card-text>
             </b-card>
@@ -30,27 +31,34 @@
 <script>
 import LoginForm from "../components/LoginForm.vue";
 import Register from "../components/Register.vue";
+import axios from "axios";
 
 export default {
   name: "Login",
   components: { LoginForm, Register },
   data() {
     return {
-      tabIndex: 0
+      tabIndex: 0,
     };
   },
+  mounted() {
+    this.wakeup();
+  },
   methods: {
-      linkClass(idx) {
-        if (this.tabIndex === idx) {
-          return ['bg-dark', 'text-secondary']
-        } else {
-          return ['bg-primary', 'text-light']
-        }
-      },
-      registered(){
-        this.tabIndex = 0;
+    wakeup(){
+      axios.post(process.env.VUE_APP_ROOT_API + "wakeup");
+    },
+    linkClass(idx) {
+      if (this.tabIndex === idx) {
+        return ["bg-dark", "text-secondary"];
+      } else {
+        return ["bg-primary", "text-light"];
       }
-    }
+    },
+    registered() {
+      this.tabIndex = 0;
+    },
+  },
 };
 </script>
 
