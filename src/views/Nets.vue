@@ -45,11 +45,7 @@ export default {
       return this.$store.state.currentWeek.week;
     },
     seasons(){
-      let season = [...new Set(this.trainingHistory.map( (item) => item.season))];
-      if (season.length == 0)
         return Array.from(new Array(this.$store.state.currentWeek.season-51), (x, i) => i + 52);
-      return season;
-
     },
     squad() {
       return this.$store.state.squad;
