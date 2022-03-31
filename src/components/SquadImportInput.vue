@@ -63,7 +63,8 @@ export default {
       await axios
         .post(
           process.env.VUE_APP_ROOT_API + "parseSquad",
-          this.textEntered.trim().replace(/\n\n/g, "|").replace(/\n/g, " ").split("|"),
+          // this.textEntered.trim().replace(/\n\n/g, "|").replace(/\n/g, " ").split("|"),
+          this.textEntered.trim().replace(/\n\n/g, "\n").replace(/\n/g, ";"),
           { headers: headers }
         )
         .then((response) => {
