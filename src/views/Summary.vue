@@ -1,6 +1,15 @@
 <template>
   <div>
     <NavigationBar />
+    <b-alert
+      :show="endSeason"
+      v-if="currentWeek.week == 1"
+      class="position-fixed fixed-bottom m-0 rounded-0 text-center"
+      style="z-index: 2000"
+      variant="danger"
+    >
+      Have you ensured to end the season? Update your player wages and your player birthdays by navigating to Manage Team --> End Season
+    </b-alert>
     <b-container fluid>
       <b-row align-v="stretch">
         <b-col>
@@ -234,11 +243,15 @@ export default {
     summary() {
       return this.summaryResult;
     },
+    currentWeek(){
+      return this.$store.state.currentWeek;
+    }
   },
   data() {
     return {
       summaryResult: {},
       show: true,
+      endSeason: true,
     };
   },
 };

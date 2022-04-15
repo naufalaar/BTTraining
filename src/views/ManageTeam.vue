@@ -34,9 +34,10 @@ import AddSkillChange from "../components/AddSkillChange.vue";
 import RemoveSkillChange from "../components/RemoveSkillChange.vue";
 import RemovePlayer from "../components/RemovePlayer.vue";
 import EditPlayer from "../components/EditPlayer.vue";
+import EndSeason from "../components/EndSeason.vue";
 
 export default {
-  components: { NavigationBar, AddSkillChange, RemoveSkillChange, RemovePlayer, EditPlayer },
+  components: { NavigationBar, AddSkillChange, RemoveSkillChange, RemovePlayer, EditPlayer, EndSeason },
   data() {
     return {
       tabIndex: 0,
@@ -45,6 +46,7 @@ export default {
         { tabName: "Delete Player", compName: "RemovePlayer" },
         { tabName: "Add Pop/Plop", compName: "AddSkillChange" },
         { tabName: "Delete Pop/Plop", compName: "RemoveSkillChange" },
+        { tabName: "End Season", compName: "EndSeason" },
       ],
     };
   },
